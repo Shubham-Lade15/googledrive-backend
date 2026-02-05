@@ -65,7 +65,6 @@ exports.register = async (req, res) => {
     // activation link
     const activationLink = `${process.env.CLIENT_URL}/activate/${token}`;
 
-    // send activation email
     await sendMail({
       to: user.email,
       subject: "Activate your Google Drive Account",
