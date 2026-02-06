@@ -1,31 +1,39 @@
 const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
-  host: "sandbox.smtp.mailtrap.io",
-  port: 2525,
+  host: "smtp.mailersend.net",
+  port: 587,
+  secure: false,
   auth: {
-    user: process.env.MAILTRAP_USER,
-    pass: process.env.MAILTRAP_PASS,
+    user: process.env.MAILERSEND_SMTP_USER,
+    pass: process.env.MAILERSEND_SMTP_PASS,
   },
 });
 
 // verify connection
 transporter.verify((error, success) => {
   if (error) {
-    console.error("❌ Mailtrap error:", error);
+    console.error("❌ Mailersend transporter error:", error);
   } else {
-    console.log("✅ Mailtrap transporter ready");
+    console.log("✅ Mailersend transporter ready");
   }
 });
 
 const sendMail = async ({ to, subject, html }) => {
-  await transporter.sendMail({
-    from: "no-reply@googledrive.app",
-    to,
-    subject,
-    html,
-  });
-  console.log("✅ Email captured in Mailtrap for:", to);
+  try {
+    await transporter.sendMail({
+      from: `"Google Drive Shubham" <MS_W5q5Dg@test-65qngkdk1ewlwr12.mlsender.net>`,
+      to,
+      subject,
+      html,
+    });
+
+    console.log("✅ REAL email sent to:", to);
+    return true;
+  } catch (error) {
+    console.error("❌ Error sending real email:", error);
+    return false;
+  }
 };
 
 module.exports = sendMail;
